@@ -1149,3 +1149,30 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* ============================================
+   LEAFLET MAP STYLES
+   ============================================ */
+
+.leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.leaflet-popup-content {
+  margin: 12px;
+}
+
+.leaflet-control-zoom {
+  display: none;
+}
+
+.custom-train-marker,
+.custom-station-marker {
+  background: transparent !important;
+  border: none !important;
+}
