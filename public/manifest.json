@@ -1,0 +1,38 @@
+{
+  "name": "RailBondhu - Train Tracker",
+  "short_name": "RailBondhu",
+  "description": "Track Bangladesh Railway trains in real-time with live location updates, chat rooms, and notifications",
+  "start_url": "/app",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d9488",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["travel", "navigation", "social"],
+  "icons": [
+    {
+      "src": "/icons/icon-512x512.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "All Trains",
+      "short_name": "Trains",
+      "description": "View all trains",
+      "url": "/app/trains",
+      "icons": [{ "src": "/icons/icon-512x512.svg", "sizes": "any" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

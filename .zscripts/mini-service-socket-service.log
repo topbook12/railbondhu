@@ -1,0 +1,11 @@
+[socket-service] Installing dependencies...
+bun install v1.3.10 (30e609e0)
+
++ socket.io@4.8.3
+
+22 packages installed [210.00ms]
+[socket-service] Running bun run dev...
+$ bun --hot index.ts
+[RailBondhu] WebSocket server starting on port 3003
+[2026-03-22T01:25:31.554Z] ✅ RailBondhu WebSocket server running on port 3003
+[2026-03-22T01:25:31.554Z] Ready to accept connections

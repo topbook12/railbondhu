@@ -1,0 +1,1151 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================
+   RAILBONDHU LIGHT THEME DESIGN SYSTEM
+   ============================================
+   
+   DESIGN PHILOSOPHY:
+   - Fresh, modern, and inviting
+   - High contrast for excellent readability
+   - Transportation-themed with a premium feel
+   - Mobile-first, touch-friendly
+   
+   COLOR PSYCHOLOGY:
+   - Teal (#0d9488): Trust, reliability, technology, water (rivers of Bangladesh)
+   - Warm Orange (#ea580c): Energy, action, warmth, urgency for CTAs
+   - Fresh White Background: Clean, modern, easy on eyes in daylight
+   - Subtle gradients: Premium feel without being distracting
+   
+   TYPOGRAPHY:
+   - Geist Sans: Clean, modern, excellent readability
+   - Geist Mono: Technical data, timestamps
+   - Scale: 12px - 48px with consistent ratios
+   
+   LIGHT THEME BENEFITS:
+   - Better for outdoor/daytime use
+   - Lower battery consumption on some screens
+   - Professional and clean appearance
+   - Easy to read in bright environments
+   
+   ============================================ */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* ============================================
+   LIGHT THEME (PRIMARY)
+   ============================================
+   
+   COLOR PALETTE EXPLANATION:
+   
+   Background (#fafbfc): 
+   - Very light gray-white, not pure white
+   - Reduces eye strain while maintaining brightness
+   - Creates subtle depth against pure white cards
+   
+   Card (#ffffff):
+   - Pure white for maximum contrast
+   - Cards "pop" against the off-white background
+   - Clean, professional appearance
+   
+   Primary Teal (#0d9488):
+   - Represents water/rivers (Bangladesh is riverine)
+   - Modern, tech-forward feel
+   - Excellent readability on light backgrounds
+   - Symbolizes movement and progress
+   
+   Accent Orange (#ea580c):
+   - Complementary to teal (creates visual interest)
+   - Warm, energetic - perfect for CTAs
+   - Creates urgency for location sharing
+   - Highly visible and attention-grabbing
+   
+   Text Colors:
+   - Primary (#0f172a): Deep slate, not pure black
+   - Muted (#64748b): Medium slate for secondary text
+   - Excellent contrast ratios for accessibility
+   
+   ============================================ */
+
+:root {
+  --radius: 0.75rem;
+  
+  /* === Core Surfaces === */
+  /* Main canvas - soft white for reduced eye strain */
+  --background: #fafbfc;
+  /* Elevated surface - pure white for maximum contrast */
+  --card: #ffffff;
+  /* Interactive surface - light gray for inputs, hover states */
+  --muted: #f1f5f9;
+  /* Popover/menu surface - clean white */
+  --popover: #ffffff;
+  
+  /* === Primary Brand Color - Teal === */
+  /* Why Teal for Light Theme?
+     - Represents water/rivers (Bangladesh is a riverine country)
+     - Modern, tech-forward
+     - Excellent contrast on light backgrounds
+     - Symbolizes movement, progress, and trust
+     - Darker shade (#0d9488) for better contrast on white
+  */
+  --primary: #0d9488;
+  --primary-foreground: #ffffff;
+  
+  /* === Secondary Surface === */
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  
+  /* === Accent Color - Orange === */
+  /* Why Orange?
+     - Complementary to teal (opposite on color wheel)
+     - Warm, energetic - perfect for CTAs
+     - Creates urgency for location sharing
+     - Highly visible on light backgrounds
+     - Darker shade (#ea580c) for better contrast
+  */
+  --accent: #ea580c;
+  --accent-foreground: #ffffff;
+  
+  /* === Functional Colors === */
+  /* Success - Train on time, location confirmed */
+  --success: #16a34a;
+  /* Warning - Train delayed, low confidence */
+  --warning: #ca8a04;
+  /* Destructive - Train cancelled, errors */
+  --destructive: #dc2626;
+  
+  /* === Text Colors === */
+  /* Primary text - headings, important content */
+  --foreground: #0f172a;
+  /* Secondary text - descriptions, labels */
+  --muted-foreground: #64748b;
+  /* Tertiary text - timestamps, hints */
+  --tertiary-foreground: #94a3b8;
+  
+  /* === Borders & Inputs === */
+  /* Light borders for subtle separation */
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  /* Focus ring matches primary */
+  --ring: #0d9488;
+  
+  /* === Chart Colors (Data Visualization) === */
+  --chart-1: #0d9488; /* Primary - main data */
+  --chart-2: #ea580c; /* Accent - secondary data */
+  --chart-3: #7c3aed; /* Purple - tertiary */
+  --chart-4: #16a34a; /* Green - positive */
+  --chart-5: #dc2626; /* Red - negative */
+  
+  /* === Sidebar === */
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0f172a;
+  --sidebar-primary: #0d9488;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ea580c;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #0d9488;
+}
+
+/* ============================================
+   DARK THEME (ALTERNATIVE)
+   ============================================
+   
+   Available for users who prefer dark mode
+   Toggle with theme switcher in settings
+   
+   ============================================ */
+
+.dark {
+  /* === Core Surfaces === */
+  --background: #0a0f1a;
+  --card: #111827;
+  --muted: #1e293b;
+  --popover: #111827;
+  
+  /* === Primary - Lighter for dark backgrounds === */
+  --primary: #14b8a6;
+  --primary-foreground: #ffffff;
+  
+  /* === Secondary === */
+  --secondary: #1e293b;
+  --secondary-foreground: #f1f5f9;
+  
+  /* === Accent === */
+  --accent: #f97316;
+  --accent-foreground: #ffffff;
+  
+  /* === Functional Colors === */
+  --destructive: #ef4444;
+  
+  /* === Text Colors === */
+  --foreground: #f1f5f9;
+  --muted-foreground: #94a3b8;
+  
+  /* === Borders === */
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: #14b8a6;
+  
+  /* === Charts === */
+  --chart-1: #14b8a6;
+  --chart-2: #f97316;
+  --chart-3: #8b5cf6;
+  --chart-4: #22c55e;
+  --chart-5: #ef4444;
+  
+  /* === Sidebar === */
+  --sidebar: #0a0f1a;
+  --sidebar-foreground: #f1f5f9;
+  --sidebar-primary: #14b8a6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f97316;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #1e293b;
+  --sidebar-ring: #14b8a6;
+}
+
+/* ============================================
+   BASE LAYER
+   ============================================ */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    /* Smooth text rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Better focus states for accessibility */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+}
+
+/* ============================================
+   CUSTOM SCROLLBAR - LIGHT THEME
+   ============================================
+   
+   Subtle scrollbar that matches the light theme
+   Almost invisible, only appears on hover
+   
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Dark theme scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* ============================================
+   CARD STYLES - LIGHT THEME
+   ============================================
+   
+   Cards use subtle shadows instead of heavy borders
+   Creates depth and hierarchy without harsh lines
+   
+   ============================================ */
+
+.card-light {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05),
+              0 1px 2px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+}
+
+.card-light:hover {
+  border-color: rgba(13, 148, 136, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08),
+              0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+/* Featured card with primary border */
+.card-featured {
+  background: var(--card);
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.1);
+}
+
+/* ============================================
+   GLASSMORPHISM - LIGHT THEME
+   ============================================
+   
+   Subtle frosted glass effect for overlays
+   Works beautifully on light backgrounds
+   
+   ============================================ */
+
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.glass-subtle {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+/* Dark theme glass */
+.dark .glass {
+  background: rgba(17, 24, 39, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.dark .glass-subtle {
+  background: rgba(17, 24, 39, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* ============================================
+   GLOW EFFECTS - LIGHT THEME
+   ============================================
+   
+   Subtle shadows that create emphasis
+   Less intense than dark theme glows
+   
+   ============================================ */
+
+.glow-primary {
+  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.15),
+              0 2px 6px rgba(13, 148, 136, 0.1);
+}
+
+.glow-accent {
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.15),
+              0 2px 6px rgba(234, 88, 12, 0.1);
+}
+
+.glow-success {
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.15);
+}
+
+.glow-warning {
+  box-shadow: 0 4px 14px rgba(202, 138, 4, 0.15);
+}
+
+.glow-destructive {
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.15);
+}
+
+/* ============================================
+   GRADIENT TEXT - LIGHT THEME
+   ============================================
+   
+   Eye-catching gradient for headings
+   Teal to Orange creates visual interest
+   
+   ============================================ */
+
+.gradient-text {
+  background: linear-gradient(135deg, #0d9488 0%, #ea580c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-subtle {
+  background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Dark theme gradient */
+.dark .gradient-text {
+  background: linear-gradient(135deg, #14b8a6 0%, #f97316 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   GRADIENT BACKGROUNDS - LIGHT THEME
+   ============================================ */
+
+.gradient-primary {
+  background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+}
+
+.gradient-accent {
+  background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+}
+
+.gradient-hero {
+  background: linear-gradient(180deg, 
+    rgba(13, 148, 136, 0.08) 0%, 
+    transparent 50%);
+}
+
+/* Subtle background patterns */
+.bg-pattern-light {
+  background-image: 
+    linear-gradient(rgba(13, 148, 136, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13, 148, 136, 0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.bg-dots-light {
+  background-image: radial-gradient(rgba(13, 148, 136, 0.1) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ============================================
+   BUTTON STYLES - LIGHT THEME
+   ============================================
+   
+   Beautiful gradient buttons with hover effects
+   
+   ============================================ */
+
+.btn-primary {
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  color: white;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.2);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-accent {
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+  color: white;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.2);
+}
+
+.btn-accent:hover {
+  background: linear-gradient(135deg, #c2410c 0%, #9a3412 100%);
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.3);
+  transform: translateY(-1px);
+}
+
+/* ============================================
+   TRAIN ANIMATIONS
+   ============================================
+   
+   Subtle animations that indicate "live" tracking
+   Professional and not distracting
+   
+   ============================================ */
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes train-move {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes location-ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+.animate-train {
+  animation: train-move 2s ease-in-out infinite;
+}
+
+.animate-location-ping {
+  animation: location-ping 1.5s ease-out infinite;
+}
+
+/* ============================================
+   CONFIDENCE INDICATORS - LIGHT THEME
+   ============================================
+   
+   Color coding for data confidence:
+   - High (green): 5+ contributors, reliable
+   - Medium (yellow): 2-4 contributors, acceptable
+   - Low (red): 1 contributor, use with caution
+   
+   ============================================ */
+
+.confidence-high {
+  color: #16a34a;
+}
+
+.confidence-medium {
+  color: #ca8a04;
+}
+
+.confidence-low {
+  color: #dc2626;
+}
+
+.confidence-high-bg {
+  background-color: rgba(22, 163, 74, 0.1);
+  border-color: rgba(22, 163, 74, 0.2);
+}
+
+.confidence-medium-bg {
+  background-color: rgba(202, 138, 4, 0.1);
+  border-color: rgba(202, 138, 4, 0.2);
+}
+
+.confidence-low-bg {
+  background-color: rgba(220, 38, 38, 0.1);
+  border-color: rgba(220, 38, 38, 0.2);
+}
+
+/* ============================================
+   STATUS COLORS - LIGHT THEME
+   ============================================
+   
+   Train status indicators with backgrounds
+   
+   ============================================ */
+
+.status-on-time {
+  color: #16a34a;
+  background-color: rgba(22, 163, 74, 0.1);
+}
+
+.status-delayed {
+  color: #ca8a04;
+  background-color: rgba(202, 138, 4, 0.1);
+}
+
+.status-cancelled {
+  color: #dc2626;
+  background-color: rgba(220, 38, 38, 0.1);
+}
+
+/* ============================================
+   HEADER STYLES - LIGHT THEME
+   ============================================
+   
+   Clean, minimal header with subtle shadow
+   
+   ============================================ */
+
+.header-light {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+/* ============================================
+   SECTION BACKGROUNDS - LIGHT THEME
+   ============================================
+   
+   Alternating section backgrounds for visual rhythm
+   
+   ============================================ */
+
+.section-primary {
+  background: var(--background);
+}
+
+.section-secondary {
+  background: var(--muted);
+}
+
+.section-featured {
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.05) 0%, rgba(234, 88, 12, 0.03) 100%);
+}
+
+/* ============================================
+   FEATURE HIGHLIGHT BOX
+   ============================================ */
+
+.feature-highlight {
+  position: relative;
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.08) 0%, rgba(13, 148, 136, 0.02) 100%);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(13, 148, 136, 0.15);
+}
+
+.feature-highlight::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #0d9488, #14b8a6);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+/* ============================================
+   MOBILE BOTTOM NAVIGATION
+   ============================================ */
+
+@media (max-width: 768px) {
+  .mobile-nav-fixed {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    /* Safe area for iOS devices */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* ============================================
+   MAP CONTAINER
+   ============================================ */
+
+.map-container {
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--muted);
+  border: 1px solid var(--border);
+}
+
+/* ============================================
+   TEXT UTILITIES
+   ============================================ */
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* ============================================
+   TRANSITIONS
+   ============================================ */
+
+.transition-smooth {
+  transition-property: color, background-color, border-color, 
+                       outline-color, fill, stroke, opacity, 
+                       box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+.transition-fast {
+  transition-duration: 100ms;
+}
+
+.transition-slow {
+  transition-duration: 300ms;
+}
+
+/* ============================================
+   ICON CONTAINERS - LIGHT THEME
+   ============================================
+   
+   Colored backgrounds for icons
+   Creates visual hierarchy and brand identity
+   
+   ============================================ */
+
+.icon-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 148, 136, 0.1);
+  border-radius: 12px;
+  color: #0d9488;
+}
+
+.icon-accent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(234, 88, 12, 0.1);
+  border-radius: 12px;
+  color: #ea580c;
+}
+
+.icon-success {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(22, 163, 74, 0.1);
+  border-radius: 12px;
+  color: #16a34a;
+}
+
+/* ============================================
+   INPUT STYLES - LIGHT THEME
+   ============================================
+   
+   Clean, accessible input fields
+   
+   ============================================ */
+
+.input-light {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: all 0.2s ease;
+}
+
+.input-light:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+}
+
+/* ============================================
+   TAG/BADGE STYLES - LIGHT THEME
+   ============================================ */
+
+.tag-primary {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba(13, 148, 136, 0.1);
+  color: #0d9488;
+  border-radius: 9999px;
+}
+
+.tag-accent {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba(234, 88, 12, 0.1);
+  color: #ea580c;
+  border-radius: 9999px;
+}
+
+/* ============================================
+   DIVIDERS - LIGHT THEME
+   ============================================ */
+
+.divider-light {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.divider-gradient {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(13, 148, 136, 0.3), transparent);
+}
+
+/* ============================================
+   MOBILE OPTIMIZATIONS - PWA & TOUCH
+   ============================================
+   
+   iOS Safe Area Support
+   Touch-optimized tap targets
+   Pull-to-refresh styling
+   Touch feedback animations
+   
+   ============================================ */
+
+/* Safe area environment variables for iOS */
+:root {
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-left: env(safe-area-inset-left, 0px);
+  --safe-area-inset-right: env(safe-area-inset-right, 0px);
+}
+
+/* iOS status bar safe area */
+.safe-top {
+  padding-top: var(--safe-area-inset-top);
+}
+
+/* iOS home indicator safe area */
+.safe-bottom {
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+/* Full safe area padding */
+.safe-area {
+  padding-top: var(--safe-area-inset-top);
+  padding-bottom: var(--safe-area-inset-bottom);
+  padding-left: var(--safe-area-inset-left);
+  padding-right: var(--safe-area-inset-right);
+}
+
+/* Touch-optimized tap targets (minimum 44px) */
+@media (pointer: coarse) {
+  button,
+  [role="button"],
+  a,
+  input[type="checkbox"],
+  input[type="radio"],
+  select {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent text selection on interactive elements */
+  button,
+  [role="button"],
+  .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+}
+
+/* Touch feedback - active state */
+@media (hover: none) and (pointer: coarse) {
+  .touch-feedback:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+  }
+  
+  .card-touch:active {
+    transform: scale(0.98);
+    border-color: var(--primary);
+  }
+}
+
+/* Prevent overscroll bounce on iOS */
+html {
+  overscroll-behavior: none;
+}
+
+body {
+  overscroll-behavior-y: contain;
+}
+
+/* Smooth scrolling for iOS */
+.scroll-smooth {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbars on mobile but keep functionality */
+@media (max-width: 768px) {
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Pull-to-refresh container */
+.ptr-container {
+  position: relative;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+}
+
+.ptr-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-100%);
+  transition: transform 0.2s ease;
+}
+
+.ptr-indicator.visible {
+  transform: translateY(0);
+}
+
+/* iOS-like rubber band effect fix */
+.no-rubber-band {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+/* Mobile keyboard handling */
+@media (max-width: 768px) {
+  body.keyboard-open {
+    position: fixed;
+    width: 100%;
+  }
+  
+  .keyboard-aware {
+    transition: transform 0.2s ease;
+  }
+  
+  body.keyboard-open .keyboard-aware {
+    transform: translateY(-30vh);
+  }
+}
+
+/* PWA fullscreen mode */
+@media (display-mode: standalone) {
+  .pwa-only {
+    display: block;
+  }
+  
+  .browser-only {
+    display: none;
+  }
+  
+  /* Extra safe area for standalone mode */
+  .pwa-header {
+    padding-top: calc(var(--safe-area-inset-top) + 8px);
+  }
+}
+
+@media not (display-mode: standalone) {
+  .pwa-only {
+    display: none;
+  }
+  
+  .browser-only {
+    display: block;
+  }
+}
+
+/* Prevent zoom on input focus (iOS) */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="url"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* Mobile bottom sheet styles */
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--card);
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.1);
+  max-height: 90vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 100;
+  padding-bottom: var(--safe-area-inset-bottom);
+}
+
+.bottom-sheet.open {
+  transform: translateY(0);
+}
+
+.bottom-sheet-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--muted-foreground);
+  border-radius: 2px;
+  margin: 12px auto;
+  opacity: 0.5;
+}
+
+/* Mobile modal backdrop */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 99;
+}
+
+.modal-backdrop.visible {
+  opacity: 1;
+}
+
+/* Network status indicator */
+.network-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--warning);
+  z-index: 9999;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.network-indicator.offline {
+  transform: scaleX(1);
+  background: var(--destructive);
+}
+
+.network-indicator.reconnecting {
+  transform: scaleX(1);
+  animation: network-pulse 1s ease-in-out infinite;
+}
+
+@keyframes network-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Mobile toast/snackbar positioning */
+@media (max-width: 768px) {
+  .mobile-toast {
+    bottom: calc(80px + var(--safe-area-inset-bottom));
+    left: 16px;
+    right: 16px;
+    width: auto;
+  }
+}
+
+/* Touch ripple effect */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 60%);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.ripple:active::after {
+  transform: translate(-50%, -50%) scale(2);
+  opacity: 1;
+  transition: none;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .card-light {
+    border-width: 2px;
+  }
+  
+  .btn-primary,
+  .btn-accent {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

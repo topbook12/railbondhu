@@ -1,0 +1,414 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// DEVELOPMENT: Using SQLite
+// For PRODUCTION with PostgreSQL, uncomment the postgresql block below
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// PRODUCTION: Use PostgreSQL (uncomment below and comment out SQLite above)
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
+
+model User {
+  id               String   @id @default(cuid())
+  name             String?
+  email            String?  @unique
+  emailVerified    DateTime?
+  image            String?
+  avatarUrl        String?
+  role             String   @default("user") // "user", "moderator", "admin"
+  reputationScore  Int      @default(0)
+  level            String   @default("Newcomer") // "Newcomer", "Contributor", "Expert", "Veteran", "Legend"
+  bio              String?
+  isBanned         Boolean  @default(false)
+  banReason        String?
+  lastActiveAt     DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  settings         UserSettings?
+  locationPings    LocationPing[]
+  chatMessages     ChatMessage[]
+  reports          Report[] @relation("ReporterReports")
+  pushSubscriptions PushSubscription[]
+  trainSubscriptions TrainSubscription[]
+  favoriteTrains   FavoriteTrain[]
+  journeys         Journey[]
+  accounts         Account[]
+  sessions         Session[]
+  userBadges       UserBadge[]
+  reputationLogs   ReputationLog[]
+  communityReports CommunityReport[] @relation("UserCommunityReports")
+  reportUpvotes    ReportUpvote[]
+  adminLogs        AdminLog[] @relation("AdminActions")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model UserSettings {
+  id                     String   @id @default(cuid())
+  userId                 String   @unique
+  locationSharingEnabled Boolean  @default(false)
+  geoAlertEnabled        Boolean  @default(false)
+  theme                  String   @default("dark")
+  updatedAt              DateTime @updatedAt
+  user                   User     @relation(fields: [userId], references: [id])
+}
+
+model Train {
+  id                   String                    @id @default(cuid())
+  trainName            String
+  trainNumber          String                    @unique
+  routeName            String
+  sourceStation        String
+  destinationStation   String
+  status               String                    @default("unknown")
+  trainType            String?                   // Express, Local, Intercity, etc.
+  classes              String?                   // JSON: ["Shovan", "Snigdha", "AC"]
+  offDays              String?                   // Weekly off days
+  createdAt            DateTime                  @default(now())
+  updatedAt            DateTime                  @updatedAt
+  routeStops           TrainRoute[]
+  locationPings        LocationPing[]
+  aggregatedLocations  AggregatedTrainLocation[]
+  chatMessages         ChatMessage[]
+  trainSubscriptions   TrainSubscription[]
+  favorites            FavoriteTrain[]
+  delayPredictions     DelayPrediction[]
+}
+
+model Station {
+  id            String        @id @default(cuid())
+  stationName   String        @unique
+  stationCode   String?
+  lat           Float         @default(0)
+  lng           Float         @default(0)
+  city          String?
+  division      String?
+  platformCount Int?
+  facilities    String?       // JSON string of facilities
+  openingTime   String?
+  closingTime   String?
+  contactNumber String?
+  address       String?
+  routeStops    TrainRoute[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @default(now())
+}
+
+model TrainRoute {
+  id                 String   @id @default(cuid())
+  trainId            String
+  stationId          String
+  sequence           Int
+  scheduledArrival   String?
+  scheduledDeparture String?
+  train              Train    @relation(fields: [trainId], references: [id])
+  station            Station  @relation(fields: [stationId], references: [id])
+
+  @@unique([trainId, sequence])
+}
+
+model LocationPing {
+  id         String   @id @default(cuid())
+  userId     String
+  trainId    String
+  lat        Float
+  lng        Float
+  accuracy   Float
+  speed      Float?
+  heading    Float?
+  timestamp  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+  train      Train    @relation(fields: [trainId], references: [id])
+}
+
+model AggregatedTrainLocation {
+  id               String   @id @default(cuid())
+  trainId          String
+  lat              Float
+  lng              Float
+  avgSpeed         Float?
+  confidenceScore  Float
+  confidenceLabel  String
+  contributorCount Int
+  updatedAt        DateTime @default(now())
+  train            Train    @relation(fields: [trainId], references: [id])
+}
+
+model ChatMessage {
+  id         String   @id @default(cuid())
+  trainId    String
+  userId     String
+  message    String
+  createdAt  DateTime @default(now())
+  isFlagged  Boolean  @default(false)
+  train      Train    @relation(fields: [trainId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Report {
+  id             String   @id @default(cuid())
+  reporterUserId String
+  targetType     String
+  targetId       String
+  reason         String
+  status         String   @default("open")
+  createdAt      DateTime @default(now())
+  reporter       User     @relation("ReporterReports", fields: [reporterUserId], references: [id])
+}
+
+model Waitlist {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  city      String?
+  createdAt DateTime @default(now())
+}
+
+// Push notification subscriptions for web push
+model PushSubscription {
+  id         String   @id @default(cuid())
+  userId     String
+  endpoint   String   @unique
+  p256dh     String
+  auth       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Train subscriptions for notifications
+model TrainSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  trainId   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  train     Train    @relation(fields: [trainId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, trainId])
+}
+
+// Favorite trains for quick access
+model FavoriteTrain {
+  id        String   @id @default(cuid())
+  userId    String
+  trainId   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  train     Train    @relation(fields: [trainId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, trainId])
+}
+
+// Journey planning
+model Journey {
+  id              String        @id @default(cuid())
+  userId          String
+  fromStationId   String
+  toStationId     String
+  departureDate   DateTime
+  preferredClass  String?
+  status          String        @default("planned")
+  notes           String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stops           JourneyStop[]
+}
+
+// Journey stops for multi-leg journeys
+model JourneyStop {
+  id           String   @id @default(cuid())
+  journeyId    String
+  trainId      String?
+  stationId    String
+  sequence     Int
+  arrivalTime  String?
+  departureTime String?
+  platform     String?
+  notes        String?
+  journey      Journey @relation(fields: [journeyId], references: [id], onDelete: Cascade)
+
+  @@unique([journeyId, sequence])
+}
+
+// Delay predictions using historical data
+model DelayPrediction {
+  id                String   @id @default(cuid())
+  trainId           String
+  stationId         String
+  predictedDelay    Int      // in minutes
+  confidence        Float    // 0-1 confidence score
+  factors           String?  // JSON string of delay factors
+  historicalData    String?  // JSON string of historical patterns
+  validUntil        DateTime
+  createdAt         DateTime @default(now())
+  train             Train    @relation(fields: [trainId], references: [id], onDelete: Cascade)
+}
+
+// ==================== COMMUNITY & SCALE FEATURES ====================
+
+// Achievement badges for gamification
+model Badge {
+  id              String          @id @default(cuid())
+  name            String          @unique
+  description     String
+  icon            String          // Emoji or icon identifier
+  category        String          // "contribution", "social", "milestone", "special"
+  rarity          String          @default("common") // "common", "rare", "epic", "legendary"
+  pointsValue     Int             @default(10)
+  requirementType String          // Type of action needed
+  requirementCount Int            @default(1)
+  isActive        Boolean         @default(true)
+  createdAt       DateTime        @default(now())
+  userBadges      UserBadge[]
+}
+
+// User earned badges
+model UserBadge {
+  id          String   @id @default(cuid())
+  userId      String
+  badgeId     String
+  earnedAt    DateTime @default(now())
+  isFeatured  Boolean  @default(false) // Pinned on profile
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge       Badge    @relation(fields: [badgeId], references: [id])
+
+  @@unique([userId, badgeId])
+}
+
+// Reputation history for tracking
+model ReputationLog {
+  id          String   @id @default(cuid())
+  userId      String
+  points      Int
+  action      String   // "location_share", "chat_message", "helpful_report", etc.
+  referenceId String?  // ID of related entity (train, message, etc.)
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Enhanced community reports
+model CommunityReport {
+  id              String   @id @default(cuid())
+  reporterId      String
+  reportType      String   // "delay", "crowding", "cleanliness", "safety", "amenity", "other"
+  targetType      String   // "train", "station", "platform"
+  targetId        String   // ID of train/station
+  title           String
+  description     String
+  location        String?  // GPS coordinates as "lat,lng"
+  severity        String   @default("low") // "low", "medium", "high", "critical"
+  status          String   @default("open") // "open", "investigating", "resolved", "dismissed"
+  upvotes         Int      @default(0)
+  resolvedAt      DateTime?
+  resolvedBy      String?  // Admin user ID
+  resolution      String?  // Resolution notes
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  reporter        User     @relation("UserCommunityReports", fields: [reporterId], references: [id], onDelete: Cascade)
+  reportUpvotes   ReportUpvote[]
+}
+
+// Report upvotes from community
+model ReportUpvote {
+  id        String   @id @default(cuid())
+  reportId  String
+  userId    String
+  createdAt DateTime @default(now())
+  report    CommunityReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([reportId, userId])
+}
+
+// Analytics events for tracking user behavior
+model AnalyticsEvent {
+  id          String   @id @default(cuid())
+  eventType   String   // "page_view", "train_search", "location_share", etc.
+  userId      String?
+  entityType  String?  // "train", "station", "journey"
+  entityId    String?
+  metadata    String?  // JSON string for additional data
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+}
+
+// Platform statistics (aggregated)
+model PlatformStats {
+  id                  String   @id @default(cuid())
+  date                DateTime @unique
+  totalUsers          Int      @default(0)
+  activeUsers         Int      @default(0)
+  newUsers            Int      @default(0)
+  totalTrains         Int      @default(0)
+  activeTrains        Int      @default(0)
+  totalPings          Int      @default(0)
+  totalMessages       Int      @default(0)
+  totalReports        Int      @default(0)
+  avgResponseTime     Float?   // Average API response time
+  uptime              Float    @default(100)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+// Admin action log for audit trail
+model AdminLog {
+  id          String   @id @default(cuid())
+  adminId     String
+  action      String   // "ban_user", "resolve_report", "update_train", etc.
+  targetType  String?  // "user", "report", "train", etc.
+  targetId    String?
+  details     String?  // JSON string with action details
+  ipAddress   String?
+  createdAt   DateTime @default(now())
+  admin       User     @relation("AdminActions", fields: [adminId], references: [id])
+}
+
+// User model extensions - Add relations to existing User model
+// Note: These will be added via relation fields
