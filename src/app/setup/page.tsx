@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Train, Database, CheckCircle, XCircle, Loader2, AlertCircle } from 'lucide-react';
+import { Train, Database, CheckCircle, XCircle, Loader2, AlertCircle, Table } from 'lucide-react';
 import Link from 'next/link';
 
 export default function SetupPage() {
@@ -16,7 +16,9 @@ export default function SetupPage() {
     error?: string;
   } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isInitializing, setIsInitializing] = useState(false);
   const [isSeeding, setIsSeeding] = useState(false);
+  const [initResult, setInitResult] = useState<{ success: boolean; message: string } | null>(null);
   const [seedResult, setSeedResult] = useState<{ success: boolean; message: string } | null>(null);
 
   useEffect(() => {
@@ -35,10 +37,36 @@ export default function SetupPage() {
         stations: 0, 
         users: 0, 
         needsSeeding: true,
-        error: 'Database connection failed'
+        error: 'Database tables not found'
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const initDatabase = async () => {
+    setIsInitializing(true);
+    setInitResult(null);
+    
+    try {
+      const res = await fetch('/api/setup/init', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ secret: 'railbondhu-seed-2024' }),
+      });
+      
+      const data = await res.json();
+      
+      if (data.success) {
+        setInitResult({ success: true, message: 'টেবিল তৈরি হয়েছে!' });
+        checkDatabase();
+      } else {
+        setInitResult({ success: false, message: data.details || data.error || 'সমস্যা হয়েছে' });
+      }
+    } catch (error) {
+      setInitResult({ success: false, message: 'টেবিল তৈরি করতে সমস্যা হয়েছে' });
+    } finally {
+      setIsInitializing(false);
     }
   };
 
@@ -70,7 +98,7 @@ export default function SetupPage() {
     } catch (error) {
       setSeedResult({ 
         success: false, 
-        message: 'ডেটাবেস সিড করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।' 
+        message: 'ডেটা যোগ করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।' 
       });
     } finally {
       setIsSeeding(false);
@@ -95,7 +123,7 @@ export default function SetupPage() {
               ডেটাবেস সেটআপ
             </CardTitle>
             <CardDescription>
-              ট্রেন এবং স্টেশনের ডেটা যোগ করুন
+              টেবিল তৈরি করুন এবং ডেটা যোগ করুন
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -124,7 +152,7 @@ export default function SetupPage() {
                 {/* Error Display */}
                 {status?.error && (
                   <div className="p-4 rounded-lg bg-red-50 text-red-800 flex items-center gap-2">
-                    <AlertCircle className="w-5 h-5" />
+                    <AlertCircle className="w-5 h-5 shrink-0" />
                     {status.error}
                   </div>
                 )}
@@ -134,7 +162,7 @@ export default function SetupPage() {
                   {(status?.trains === 0) ? (
                     <Badge variant="destructive" className="flex items-center gap-1">
                       <XCircle className="w-3 h-3" />
-                      ডেটা যোগ করা প্রয়োজন
+                      সেটআপ প্রয়োজন
                     </Badge>
                   ) : (
                     <Badge variant="default" className="flex items-center gap-1 bg-green-600">
@@ -144,46 +172,69 @@ export default function SetupPage() {
                   )}
                 </div>
 
-                {/* Seed Button - Always enabled if no trains */}
-                <Button
-                  onClick={seedDatabase}
-                  disabled={isSeeding}
-                  className="w-full btn-primary"
-                  size="lg"
-                >
-                  {isSeeding ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      ডেটা যোগ হচ্ছে...
-                    </>
-                  ) : (
-                    <>
-                      <Database className="w-4 h-4 mr-2" />
-                      ডেটা যোগ করুন
-                    </>
-                  )}
-                </Button>
-
-                {/* Result */}
-                {seedResult && (
-                  <div className={`p-4 rounded-lg ${seedResult.success ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
-                    {seedResult.message}
+                {/* Step 1: Init Tables */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-sm font-medium">
+                    <span className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs">১</span>
+                    টেবিল তৈরি করুন
                   </div>
-                )}
+                  <Button
+                    onClick={initDatabase}
+                    disabled={isInitializing || (status?.trains !== undefined && status.trains > 0)}
+                    className="w-full"
+                    variant="outline"
+                  >
+                    {isInitializing ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        টেবিল তৈরি হচ্ছে...
+                      </>
+                    ) : (
+                      <>
+                        <Table className="w-4 h-4 mr-2" />
+                        টেবিল তৈরি করুন
+                      </>
+                    )}
+                  </Button>
+                  {initResult && (
+                    <div className={`p-3 rounded-lg text-sm ${initResult.success ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+                      {initResult.message}
+                    </div>
+                  )}
+                </div>
 
-                {/* Instructions */}
-                <div className="text-sm text-muted-foreground space-y-2 p-4 bg-muted rounded-lg">
-                  <p className="font-medium">📝 নির্দেশনা:</p>
-                  <ol className="list-decimal list-inside space-y-1">
-                    <li>"ডেটা যোগ করুন" বাটনে ক্লিক করুন</li>
-                    <li>১৫টি ট্রেন ও ১৫টি স্টেশন যোগ হবে</li>
-                    <li>এডমিন ইউজার তৈরি হবে</li>
-                    <li>তারপর অ্যাপে যান এবং ট্রেন দেখুন</li>
-                  </ol>
+                {/* Step 2: Seed Data */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-sm font-medium">
+                    <span className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-xs">২</span>
+                    ডেটা যোগ করুন
+                  </div>
+                  <Button
+                    onClick={seedDatabase}
+                    disabled={isSeeding || (status?.trains !== undefined && status.trains > 0)}
+                    className="w-full btn-primary"
+                  >
+                    {isSeeding ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        ডেটা যোগ হচ্ছে...
+                      </>
+                    ) : (
+                      <>
+                        <Database className="w-4 h-4 mr-2" />
+                        ডেটা যোগ করুন
+                      </>
+                    )}
+                  </Button>
+                  {seedResult && (
+                    <div className={`p-3 rounded-lg text-sm ${seedResult.success ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+                      {seedResult.message}
+                    </div>
+                  )}
                 </div>
 
                 {/* Links */}
-                <div className="flex gap-4">
+                <div className="flex gap-4 pt-4">
                   <Link href="/" className="flex-1">
                     <Button variant="outline" className="w-full">
                       হোম পেজে যান
