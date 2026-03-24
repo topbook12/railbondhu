@@ -6,7 +6,9 @@
 'use client';
 
 import { ThemeProvider } from 'next-themes';
+import { SessionProvider } from 'next-auth/react';
 import { ReactNode } from 'react';
+import { UserProvider } from '@/hooks/use-user';
 
 interface ProvidersProps {
   children: ReactNode;
@@ -14,13 +16,17 @@ interface ProvidersProps {
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="light"
-      enableSystem
-      disableTransitionOnChange={false}
-    >
-      {children}
-    </ThemeProvider>
+    <SessionProvider>
+      <UserProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange={false}
+        >
+          {children}
+        </ThemeProvider>
+      </UserProvider>
+    </SessionProvider>
   );
 }
