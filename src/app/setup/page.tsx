@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Train, Database, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { Train, Database, CheckCircle, XCircle, Loader2, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 
 export default function SetupPage() {
@@ -13,6 +13,7 @@ export default function SetupPage() {
     stations: number;
     users: number;
     needsSeeding: boolean;
+    error?: string;
   } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSeeding, setIsSeeding] = useState(false);
@@ -29,6 +30,13 @@ export default function SetupPage() {
       setStatus(data);
     } catch (error) {
       console.error('Failed to check database:', error);
+      setStatus({ 
+        trains: 0, 
+        stations: 0, 
+        users: 0, 
+        needsSeeding: true,
+        error: 'Database connection failed'
+      });
     } finally {
       setIsLoading(false);
     }
@@ -48,13 +56,22 @@ export default function SetupPage() {
       const data = await res.json();
       
       if (data.success) {
-        setSeedResult({ success: true, message: `সফল! ${data.trains}টি ট্রেন এবং ${data.stations}টি স্টেশন যোগ করা হয়েছে।` });
+        setSeedResult({ 
+          success: true, 
+          message: `সফল! ${data.trains}টি ট্রেন এবং ${data.stations}টি স্টেশন যোগ করা হয়েছে।` 
+        });
         checkDatabase();
       } else {
-        setSeedResult({ success: false, message: data.error || 'সমস্যা হয়েছে' });
+        setSeedResult({ 
+          success: false, 
+          message: data.details || data.error || 'সমস্যা হয়েছে' 
+        });
       }
     } catch (error) {
-      setSeedResult({ success: false, message: 'ডেটাবেস সিড করতে সমস্যা হয়েছে' });
+      setSeedResult({ 
+        success: false, 
+        message: 'ডেটাবেস সিড করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।' 
+      });
     } finally {
       setIsSeeding(false);
     }
@@ -104,9 +121,17 @@ export default function SetupPage() {
                   </div>
                 </div>
 
+                {/* Error Display */}
+                {status?.error && (
+                  <div className="p-4 rounded-lg bg-red-50 text-red-800 flex items-center gap-2">
+                    <AlertCircle className="w-5 h-5" />
+                    {status.error}
+                  </div>
+                )}
+
                 {/* Status Badge */}
                 <div className="flex justify-center">
-                  {status?.needsSeeding ? (
+                  {(status?.trains === 0) ? (
                     <Badge variant="destructive" className="flex items-center gap-1">
                       <XCircle className="w-3 h-3" />
                       ডেটা যোগ করা প্রয়োজন
@@ -119,10 +144,10 @@ export default function SetupPage() {
                   )}
                 </div>
 
-                {/* Seed Button */}
+                {/* Seed Button - Always enabled if no trains */}
                 <Button
                   onClick={seedDatabase}
-                  disabled={isSeeding || !status?.needsSeeding}
+                  disabled={isSeeding}
                   className="w-full btn-primary"
                   size="lg"
                 >
@@ -145,6 +170,17 @@ export default function SetupPage() {
                     {seedResult.message}
                   </div>
                 )}
+
+                {/* Instructions */}
+                <div className="text-sm text-muted-foreground space-y-2 p-4 bg-muted rounded-lg">
+                  <p className="font-medium">📝 নির্দেশনা:</p>
+                  <ol className="list-decimal list-inside space-y-1">
+                    <li>"ডেটা যোগ করুন" বাটনে ক্লিক করুন</li>
+                    <li>১৫টি ট্রেন ও ১৫টি স্টেশন যোগ হবে</li>
+                    <li>এডমিন ইউজার তৈরি হবে</li>
+                    <li>তারপর অ্যাপে যান এবং ট্রেন দেখুন</li>
+                  </ol>
+                </div>
 
                 {/* Links */}
                 <div className="flex gap-4">
